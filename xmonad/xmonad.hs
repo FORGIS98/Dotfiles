@@ -7,6 +7,7 @@ import XMonad.Util.SpawnOnce
 import XMonad.Actions.Volume
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
+import Control.Monad
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -130,7 +131,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_c     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask, xK_c     ), io exitSuccess)
 
     -- Restart xmonad
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
@@ -139,20 +140,21 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
 
     -- Brightness control
-    , ((0, XF86.xF86XK_MonBrightnessUp), spawn "pkexec /usr/bin/brillo -A 7.5")
-    , ((0, XF86.xF86XK_MonBrightnessDown), spawn "pkexec /usr/bin/brillo -U 7.5")
+    , ((0, XF86.xF86XK_MonBrightnessUp), spawn "pkexec /usr/bin/brillo -A 5")
+    , ((0, XF86.xF86XK_MonBrightnessDown), spawn "pkexec /usr/bin/brillo -U 5")
 
     -- Audio controls
-    , ((0, XF86.xF86XK_AudioRaiseVolume), raiseVolume 5 >> return())
-    , ((0, XF86.xF86XK_AudioLowerVolume), lowerVolume 5 >> return())
+    , ((0, XF86.xF86XK_AudioRaiseVolume), Control.Monad.void (raiseVolume 5))
+    , ((0, XF86.xF86XK_AudioLowerVolume), Control.Monad.void (lowerVolume 5))
 
     -- Screen Shot
     , ((0,                      xK_Print), spawn "escrotum -s $f ~/Imágenes/Captura--%Y-%m-%d-%H%M%S.png")
-    , ((modm .|. shiftMask, xK_0 ), spawn ("i3lockmore --no-unlock-indicator --image-fill ~/Imágenes/WallPaper.jpg"))
+    -- , ((modm .|. shiftMask, xK_0 ), spawn ("i3lockmore --no-unlock-indicator --image-fill ~/Imágenes/WallPaper.jpg"))
+    , ((modm .|. shiftMask, xK_0 ), spawn "i3lockmore --image-fill ~/Imágenes/WallPaper.jpg")
 
     -- Set gif as wallpaper
-    , ((modm              , xK_g ), spawn ("bash $HOME/.xmonad/MonitorSetUp/backGround.sh $HOME/.xmonad/MonitorSetUp/backGround.mp4 &"))
-    , ((modm .|. shiftMask, xK_g ), spawn ("killall mpv"))
+    , ((modm              , xK_g ), spawn "bash $HOME/.xmonad/MonitorSetUp/backGround.sh $HOME/.xmonad/MonitorSetUp/backGround.mp4 &")
+    , ((modm .|. shiftMask, xK_g ), spawn "killall mpv")
 
     ]
     ++
@@ -174,22 +176,21 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         | (key, sc) <- zip [xK_k, xK_l, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
-
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
 --
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
+    [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster)
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
 
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
+    , ((modm, button3), \w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster)
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
@@ -281,7 +282,9 @@ myStartupHook = do
 --
 main = do 
         xmproc <- spawnPipe "killall xmobar; xmobar -x 0 /home/jorge/.config/xmobar/xmobarrc"
-        xmproc <- spawnPipe "killall xmobar; xmobar -x 1 /home/jorge/.config/xmobar/xmobarrc"
+        xmproc <- spawnPipe "sleep 1; xmobar -x 1 /home/jorge/.config/xmobar/xmobarrc"
+        -- No X cursor on empty workspace :D
+        xmproc <- spawnPipe "xsetroot -cursor_name left_ptr"
         xmonad $ docks defaults
 
 -- A structure containing your configuration settings, overriding
