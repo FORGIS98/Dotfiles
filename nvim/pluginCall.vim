@@ -37,8 +37,15 @@ Plug 'mattn/emmet-vim'
 Plug 'hail2u/vim-css3-syntax'
 " Show colors preview in css
 Plug 'gko/vim-coloresque'
-" Discord
-" Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 " RDF for Vim
 Plug 'niklasl/vim-rdf'
+" Elixir plugins :D
+Plug 'elixir-editors/vim-elixir'
+Plug 'thinca/vim-ref'
+Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
+Plug 'slashmili/alchemist.vim'
+" Autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Para cambiar parentesis por cochetes y demas
+Plug 'tpope/vim-surround'
 call plug#end()

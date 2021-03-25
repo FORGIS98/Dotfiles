@@ -28,7 +28,7 @@ set relativenumber
 " set number
 
 " Number of lines offset when jumping
-set scrolloff=2
+set scrolloff=5
 
 " Tab key enters 2 spaces
 set expandtab tabstop=2 shiftwidth=2 softtabstop=2
@@ -69,6 +69,9 @@ noremap j h
 noremap k j
 noremap l k
 noremap ñ l
+
+noremap gk gj
+noremap gl gk
 
 " Ignore case when searching
 set ignorecase
@@ -186,11 +189,12 @@ endif
 filetype on
 
 " Theme
-colorscheme gruvbox
-set bg=dark
-
-" Background color
-set background=dark
+colorscheme molokai
+" colorscheme atom-dark-256
+" colorscheme gruvbox
+" colorscheme monokai-phoenix
+" colorscheme onehalfdark
+" colorscheme hyper
 
 " Para que si una linea es muy grande y no cabe en la panralla no me muestre @@@
 set display+=lastline
