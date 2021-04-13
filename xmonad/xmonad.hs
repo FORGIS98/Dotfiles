@@ -2,12 +2,14 @@
 import XMonad
 import Data.Monoid
 import System.Exit
+import Control.Monad
+
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Actions.Volume
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
-import Control.Monad
+import XMonad.Hooks.ManageHelpers
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -150,7 +152,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Screen Shot
     , ((0,                      xK_Print), spawn "escrotum -s $f ~/Imágenes/Captura--%Y-%m-%d-%H%M%S.png")
     -- , ((modm .|. shiftMask, xK_0 ), spawn ("i3lockmore --no-unlock-indicator --image-fill ~/Imágenes/WallPaper.jpg"))
-    , ((modm .|. shiftMask, xK_0 ), spawn "i3lockmore --image-fill ~/Imágenes/WallPaper.jpg")
+    , ((modm .|. shiftMask, xK_0 ), spawn "i3lockmore --image-fill ~/Imágenes/WallPaper.jpeg")
 
     -- Set gif as wallpaper
     , ((modm              , xK_g ), spawn "bash $HOME/.xmonad/MonitorSetUp/backGround.sh $HOME/.xmonad/MonitorSetUp/backGround.mp4 &")
@@ -239,7 +241,8 @@ myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore 
+    , isFullscreen --> doFullFloat             ]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -270,10 +273,8 @@ myLogHook = return ()
 -- By default, do nothing.
 -- myStartupHook = return()
 myStartupHook = do
-        spawnOnce "nitrogen --restore &"
-        spawnOnce "picom &"
-        spawnOnce "bash $HOME/.xmonad/MonitorSetUp/arandr.sh &"
-        setWMName "LG3D"
+        spawn "$HOME/.xmonad/scripts/autostart.sh"
+        setWMName "LG3D" -- for java apps...you know java is always very special :D
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -281,10 +282,6 @@ myStartupHook = do
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do 
-        xmproc <- spawnPipe "killall xmobar; xmobar -x 0 /home/jorge/.config/xmobar/xmobarrc"
-        xmproc <- spawnPipe "sleep 1; xmobar -x 1 /home/jorge/.config/xmobar/xmobarrc"
-        -- No X cursor on empty workspace :D
-        xmproc <- spawnPipe "xsetroot -cursor_name left_ptr"
         xmonad $ docks defaults
 
 -- A structure containing your configuration settings, overriding
