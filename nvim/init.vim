@@ -89,11 +89,14 @@ set lazyredraw
 " Disable beep on errors
 set noerrorbells
 
-" Fold based on indention levels
-" set foldmethod=indent
-
+" Manual folds, other option are: indent and syntax
+set foldmethod=indent
+" How many folds should be open
+set foldlevel=1
+" Column with folds, I don't want columns :D
+set foldcolumn=0
 " Only fold up to three nested levels
-" set foldnestmax=3
+set foldnestmax=2
 
 " Display a confirmation dialog when closing an unsaved file
 set confirm
@@ -219,4 +222,7 @@ augroup remember_folds
 augroup END
 
 " repe pero es que no me hace caso :(
-set expandtab tabstop=2 shiftwidth=2 softtabstop=2
+set expandtab 
+set tabstop=2 
+set shiftwidth=2 
+set softtabstop=2
