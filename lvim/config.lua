@@ -82,6 +82,7 @@ lvim.builtin.treesitter.ensure_installed = {
   "rust",
   "java",
   "yaml",
+  "norg",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
@@ -222,4 +223,30 @@ lvim.plugins = {
     cmd = "TroubleToggle",
   },
   { "rafi/awesome-vim-colorschemes" },
+  {
+    "nvim-neorg/neorg",
+    config = function()
+      require('neorg').setup {
+        load = {
+          ["core.defaults"] = {}, -- Loads default behaviour
+          ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
+          ["core.norg.dirman"] = { -- Manages Neorg workspaces
+            config = {
+              workspaces = {
+                notes = "~/notes",
+              },
+            },
+          },
+        },
+      }
+    end,
+    run = ":Neorg sync-parsers",
+    requires = "nvim-lua/plenary.nvim",
+  },
+  {
+    'nvim-orgmode/orgmode',
+    config = function()
+      require('orgmode').setup_ts_grammar()
+    end
+  }
 }
