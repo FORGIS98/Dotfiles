@@ -85,8 +85,13 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(map! :nv "j" #'evil-backward-char
-      :nv "k" #'evil-next-line
-      :nv "l" #'evil-previous-line
-      :nv "ñ" #'evil-forward-char)
+;; enseña el cursor mejor cuando te mueves
+(beacon-mode 1)
 
+;; org-journal config
+(setq org-journal-dir "/home/jorge/doomed-brain/journal"
+      org-journal-date-prefix "#+title: "
+      org-journal-time-prefix ""
+      org-journal-file-format "%d-%m-%y.org")
+
+(setq org-roam-directory "/home/jorge/doomed-brain/roam")
