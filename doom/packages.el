@@ -52,3 +52,6 @@
 (package! evil-tutor)
 (package! beacon)
 (package! sly)
+(package! exec-path-from-shell)
+(package! denote)
+(package! denote-menu)

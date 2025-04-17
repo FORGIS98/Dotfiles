@@ -92,6 +92,36 @@
 (setq org-journal-dir "/home/jorge/doomed-brain/journal"
       org-journal-date-prefix "#+title: "
       org-journal-time-prefix ""
-      org-journal-file-format "%d-%m-%y.org")
+      org-journal-file-format "%y-%m-%d.org")
 
 (setq org-roam-directory "/home/jorge/doomed-brain/roam")
+(org-roam-db-autosync-mode)
+
+;; config del ssh agent para git
+(use-package! exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-variables '("SSH_AUTH_SHOCK" "SSH_AGENT_PID"))
+  :config
+  (exec-path-from-shell-initialize))
+
+(after! org-roam
+  (setq org-roam-db-update-on-save t))
+
+(use-package denote
+  :ensure t
+  :hook (dired-mode . denote-dired-mode)
+  :config
+  (setq denote-directory (expand-file-name "/home/jorge/brain-dump"))
+  (denote-rename-buffer-mode 1)
+
+  ;; Doom leader key bindings
+  (map! :leader
+        :prefix ("n" . "notes")
+        :desc "search or create file"        "n" #'denote-open-or-create
+        :desc "rename file"                  "r" #'denote-rename-file
+        :desc "link note"                    "l" #'denote-link
+        :desc "backlinks"                    "b" #'denote-backlinks
+        :desc "dired notes"                  "d" #'denote-dired
+        :desc "grep notes"                   "g" #'denote-grep
+        :desc "create under directory"       "y" #'denote-subdirectory)
+  (setq denote-known-keywords '()))
