@@ -55,3 +55,5 @@
 (package! exec-path-from-shell)
 (package! denote)
 (package! denote-menu)
+(package! denote-silo)
+(package! denote-journal)

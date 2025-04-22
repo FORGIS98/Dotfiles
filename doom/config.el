@@ -107,16 +107,17 @@
 (after! org-roam
   (setq org-roam-db-update-on-save t))
 
-(use-package denote
+(use-package! denote
+  :defer nil
   :ensure t
   :hook (dired-mode . denote-dired-mode)
   :config
-  (setq denote-directory (expand-file-name "/home/jorge/brain-dump"))
+  (setq denote-directory (expand-file-name "/home/jorge/mi-gemelo-digital"))
   (denote-rename-buffer-mode 1)
 
   ;; Doom leader key bindings
   (map! :leader
-        :prefix ("n" . "notes")
+        :prefix ("d" . "denote")
         :desc "search or create file"        "n" #'denote-open-or-create
         :desc "rename file"                  "r" #'denote-rename-file
         :desc "link note"                    "l" #'denote-link
@@ -125,3 +126,16 @@
         :desc "grep notes"                   "g" #'denote-grep
         :desc "create under directory"       "y" #'denote-subdirectory)
   (setq denote-known-keywords '()))
+
+(use-package denote-journal
+  :ensure t
+  :commands ( denote-journal-new-entry
+              denote-journal-new-or-existing-entry
+              denote-journal-link-or-create-entry )
+  :hook (calendar-mode . denote-journal-calendar-mode)
+  :config
+  (setq denote-journal-directory
+        (expand-file-name "mi-diario" denote-directory))
+  (setq denote-journal-keyword "diario")
+  ;; Read the doc string of `denote-journal-title-format'.
+  (setq denote-journal-title-format nil))
