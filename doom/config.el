@@ -44,6 +44,8 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/mi-gemelo-digital/")
+(setq org-agenda-start-on-weekday 1)
+(setq calendar-week-start-day 1)
 (setq org-agenda-files
       (directory-files-recursively "~/mi-gemelo-digital/" "\\.org$"))
 
@@ -72,14 +74,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                  (org-agenda-overriding-header "High Priority! DO-NOW:")))
           (agenda ""
                   ((org-agenda-span 3)
+                   (org-deadline-warning-days 0)
+                   (org-agenda-skip-deadline-prewarning-if-scheduled t)
                    (org-agenda-start-day "0d")
-                   (org-agenda-overriding-header "Agenda:")))
+                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
                    ((org-agenda-skip-function (lambda ()
                             (or (my/org-skip-subtree-if-habit)
                                 (my/org-skip-subtree-if-priority ?A)
                                 (org-agenda-skip-if nil '(scheduled deadline)))))
-                    (org-agenda-overriding-header "TODO-LIST:"))))
+                    (org-agenda-overriding-header "TODO-LIST:")
+                    (org-agenda-prefix-format " %i %-25:c"))))
          ((org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))))
 
@@ -143,8 +148,43 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         :desc "backlinks"                    "b" #'denote-backlinks
         :desc "dired notes"                  "d" #'denote-dired
         :desc "grep notes"                   "g" #'denote-grep
-        :desc "create under directory"       "y" #'denote-subdirectory)
+        :desc "template"                     "t" #'denote-template)
   (setq denote-known-keywords '()))
+
+(setq frame-title-format "Emacs")
+
+;; active Org-babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(;; other Babel languages
+   (plantuml . t)))
+
+(setq org-plantuml-jar-path
+      (expand-file-name "/home/jorge/Documentos/plantuml-1.2025.7.jar"))
+
+(org-display-inline-images 1)
+
+;; denote templates
+(setq denote-templates
+      `((drs . ,(concat "#+startup: overview\n\n"
+                        "DRS:\nVC:\nInicio INTE:\nInicio CERT:\nPROD:\n\n"
+                        "* SHAREPOINT:\n"
+                        "* CONTEXTO - QUE SE QUIERE?\n"
+                        "* SOFTWARE AFECTADO\n"
+                        "* FLUJOS DE EJECUCION\n"
+                        "* DUDAS\n"
+                        "* TAREAS\n:properties:\n:visibility: all\n:end:\n"
+                        ))
+        (redmine . ,(concat "#+startup: overview\n\n"
+                            "Redmine:\nPROD:\n\n"
+                            "* QUE SE ARREGLA?\n"
+                            "* SOFTWARE AFECTADO\n"
+                            "* FLUJOS DE EJECUCION\n"
+                            "* TAREAS\n:properties:\n:visibility: all\n:end:\n"
+                            ))
+        (prueba . ,(concat "* H1\n"
+                           "* H2\n"
+                           ))))
 
 ;; esto es por que vterm da error si tengo en mi .zshrc ^j
 (add-hook 'vterm-mode-hook
@@ -175,7 +215,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            :prepend t)
           ("j" "Diario"
            entry (file+datetree "journal.org")
-           "* %?"))))
+           "* %?")
+          ("m" "meeting" entry (file "~/emacs-denote/meetings.org")
+         "* REU %?"))))
 
 (map! :leader
       :desc "Capture something."           "x" #'org-capture
