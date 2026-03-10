@@ -132,7 +132,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :ensure t
   :hook (dired-mode . denote-dired-mode)
   :config
-  (setq denote-directory (expand-file-name "~/mi-gemelo-digital/denote"))
+  (setq denote-directory (expand-file-name "~/mi-gemelo-digital/personal"))
   (denote-rename-buffer-mode 1)
 
   (map! :leader
@@ -198,3 +198,18 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 ;; log into LOGBOOK drawer
 (setq org-log-into-drawer t)
+
+(use-package! denote-silo
+  :defer nil
+  :ensure t
+  :config
+    (setq denote-silo-directories
+          (list denote-directory
+                "~/mi-gemelo-digital/personal/"
+                "~/mi-gemelo-digital/work/"))
+  (map! :leader
+        :prefix ("d" . "denote")
+        (:prefix ("s" . "silo")
+        :desc "open or create note in silo"        "n" #'denote-silo-open-or-create
+        :desc "select silo and run a command"      "s" #'denote-silo-select-silo-then-command
+        :desc "silo dired"                         "d" #'denote-silo-dired)))

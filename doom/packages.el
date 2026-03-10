@@ -55,5 +55,6 @@
 
 (package! beacon)
 (package! denote)
+(package! denote-silo)
 (package! calfw-org)
 (package! org-timeblock)
