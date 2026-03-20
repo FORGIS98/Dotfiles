@@ -74,3 +74,20 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 ;; log into LOGBOOK drawer
 (setq org-log-into-drawer t)
+
+(after! org
+  (setq org-start-on-weekday 1)
+  (setq org-capture-templates
+        '(("t" "Todo" entry
+           (file "todo.org")
+           "** TODO %?\n"
+           :prepend t)
+          ("j" "Diario"
+           entry (file+datetree "journal.org")
+           "* %?")
+          ("m" "meeting" entry (file "meetings.org")
+         "* REU %?"))))
+
+(map! :leader
+      :desc "Capture something."           "x" #'org-capture
+      :desc "Pop up a persistent scratch buffer." "X" #'doom/open-scratch-buffer)
