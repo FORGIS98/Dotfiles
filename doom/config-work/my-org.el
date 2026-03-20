@@ -1,5 +1,6 @@
-;;; config-personal/my-org.el -*- lexical-binding: t; -*-
+;;; config-work/my-org.el -*- lexical-binding: t; -*-
 
+(setq org-directory "~/mi-gemelo-digital/")
 (setq org-agenda-start-on-weekday 1)
 (setq calendar-week-start-day 1)
 (setq org-agenda-files
